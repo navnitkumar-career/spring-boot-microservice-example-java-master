@@ -1,0 +1,43 @@
+# this should serve as base config file for all apps
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka/
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  health:
+    jms:
+      enabled: true
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          oidc:
+            issuer-uri: http://localhost:8082/realms/spring-cloud-ms-ex
+        registration:
+          oidc:
+            client-secret: secret123
+            scope: openid, profile, email, offline_access # last one for refresh tokens
+springdoc:
+  api-docs:
+    resolve-schema-properties: false
+  show-actuator: true
+  swagger-ui:
+    try-it-out-enabled: false
+  writer-with-order-by-keys: true
